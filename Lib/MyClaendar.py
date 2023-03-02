@@ -102,7 +102,7 @@ class MyCalendar:
                     self.days[week_day + n]['bg'] = '#d2d2d2'
 
         for elem in self.holidays:
-            if int(elem[0]) == self.month:
+            if int(elem[0]) == self.month and self.days[week_day + int(elem[1]) - 1]['bg'] != 'green':
                 self.days[week_day + int(elem[1]) - 1]['bg'] = 'red'
 
         for n in range(week_day):
@@ -139,7 +139,7 @@ class MyCalendar:
             self.holidays.append(elem)
         self._fill()
 
-    def _reload_holidays(self, path='holi.txt'):
+    def _reload_holidays(self, path='../resources/holi.txt'):
         self.holidays.clear()
         f = open(path, 'r')
         for elem in f:
@@ -147,7 +147,7 @@ class MyCalendar:
             self.holidays.append([month, days])
         f.close()
 
-    def _add_holi(self, path='holi.txt'):
+    def _add_holi(self, path='../resources/holi.txt'):
         date = ''.join(char for char in self.add_hol_area.get('1.0', END) if char.isalnum() or char == '.')
         if len(date) != 5 or date[2] != '.' or str(date[0:2] + date[3:5]).isnumeric() == False:
             return
@@ -155,5 +155,4 @@ class MyCalendar:
         f = open(path, 'a')
         f.write(date[3:5] + '.' + date[0:2] + '\n')
         f.close()
-        self._reload_holidays(path)
         self._fill()

@@ -5,13 +5,16 @@ import logging
 
 
 class MyCalendar:
-    def __init__(self, title="Календарь", icopath='../resources/calendar.ico', holipath='../resources/holi.txt'):
-        try:
-            f = open(holipath, 'r')
-        except:
-            f = open(holipath, 'w')
-        finally:
-            f.close()
+
+    def __init__(self, title="Календарь", icopath='../resources/calendar.ico', holidaypath='../holi.txt'):
+        """
+        Class MyCalendar implements calendar with user-friendly interface
+        :param title: liable of application
+        :param icopath: path to icon of application
+        :param holidaypath: path to file with holidays or where create it
+        """
+        f = open(holidaypath, 'w')
+        f.close()
 
         self.root = Tk()
         self.root.title(title)
@@ -41,10 +44,14 @@ class MyCalendar:
         except:
             logging.error("Ico not found...")
 
-        self.holipath = holipath
+        self.holipath = holidaypath
         self._fill()
 
     def _back(self):
+        """
+        return calendar to prev month
+        :return: void
+        """
         self.month -= 1
 
         if self.month == 0:
@@ -54,6 +61,10 @@ class MyCalendar:
         self._fill()
 
     def _next(self):
+        """
+        return calendar to next month
+        :return: void
+        """
         self.month += 1
 
         if self.month == 13:
@@ -63,9 +74,13 @@ class MyCalendar:
         self._fill()
 
     def _fill(self):
+        """
+        fill all square with data and coloring it
+        :return: void
+        """
         self.add_hol_area.delete('1.0', END)
         self.days.clear()
-        self._reload_holidays(self.holipath)
+        self._reload_holidays()
 
         for n in range(7):
             lbl = Label(self.root, text=calendar.day_abbr[n], width=1, height=1, font='Arial 10 bold', fg='darkblue')
@@ -132,27 +147,34 @@ class MyCalendar:
         self.add_hol_area.insert(END, "дд.мм (напр: 01.01)")
 
     def start(self):
+        """
+        loading interface and start it in mainloop
+        :return: void
+        """
         self.root.mainloop()
 
-    def set_holidays(self, *args):
-        for elem in args:
-            self.holidays.append(elem)
-        self._fill()
-
-    def _reload_holidays(self, path='../resources/holi.txt'):
+    def _reload_holidays(self):
+        """
+        reload holidays
+        :return: void
+        """
         self.holidays.clear()
-        f = open(path, 'r')
+        f = open(self.holipath, 'r')
         for elem in f:
             month, days = elem.split(sep='.')
             self.holidays.append([month, days])
         f.close()
 
-    def _add_holi(self, path='../resources/holi.txt'):
+    def _add_holi(self):
+        """
+        add new holidays in list
+        :return: void
+        """
         date = ''.join(char for char in self.add_hol_area.get('1.0', END) if char.isalnum() or char == '.')
         if len(date) != 5 or date[2] != '.' or str(date[0:2] + date[3:5]).isnumeric() == False:
             return
 
-        f = open(path, 'a')
+        f = open(self.holipath, 'a')
         f.write(date[3:5] + '.' + date[0:2] + '\n')
         f.close()
         self._fill()

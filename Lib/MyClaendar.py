@@ -18,6 +18,7 @@ class MyCalendar:
 
         self.root = Tk()
         self.root.title(title)
+        self.root.resizable(False, False)
         self.days = []
         self.holidays = []
 

@@ -36,6 +36,9 @@ class MyCalendar:
         self.add_hol_btn = Button(self.root, text="Add holiday", command=self._add_holi)
         self.add_hol_btn.grid(row=10, column=2, columnspan=3, sticky=NSEW)
 
+        self.rem_hol_btn = Button(self.root, text="Remove holiday", command=self._rem_holi)
+        self.rem_hol_btn.grid(row=11, column=2, columnspan=3, sticky=NSEW)
+
         self.info_label = Label(self.root, text='0', width=1, height=1, font='Arial 16 bold', fg='blue')
         self.info_label.grid(row=0, column=1, columnspan=5, sticky=NSEW)
 
@@ -161,6 +164,8 @@ class MyCalendar:
         self.holidays.clear()
         f = open(self.holipath, 'r')
         for elem in f:
+            if elem == '\n':
+                break
             month, days = elem.split(sep='.')
             self.holidays.append([month, days])
         f.close()
@@ -176,5 +181,35 @@ class MyCalendar:
 
         f = open(self.holipath, 'a')
         f.write(date[3:5] + '.' + date[0:2] + '\n')
+        f.close()
+        self._fill()
+
+    def _rem_holi(self):
+        """
+        rem holidays in list
+        :return: void
+        """
+        date = ''.join(char for char in self.add_hol_area.get('1.0', END) if char.isalnum() or char == '.')
+        if len(date) != 5 or date[2] != '.' or str(date[0:2] + date[3:5]).isnumeric() == False:
+            return
+
+        date = date[3:5] + '.' + date[0:2]
+        f = open(self.holipath, 'r')
+        f2 = open(str(self.holipath + 't'), 'w')
+
+        for s in f:
+            if s[:5] == date[:5]:
+                continue
+            f2.write(s + '\n')
+
+        f.close()
+        f2.close()
+        f = open(self.holipath, 'w')
+        f2 = open(str(self.holipath + 't'), 'r')
+
+        for s in f2:
+            f.write(s + '\n')
+
+        f2.close()
         f.close()
         self._fill()

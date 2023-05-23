@@ -1,7 +1,7 @@
-from tkinter import *
 import calendar
 import datetime
 import logging
+from tkinter import *
 
 
 class MyCalendar:
@@ -13,7 +13,7 @@ class MyCalendar:
         :param icopath: path to icon of application
         :param holidaypath: path to file with holidays or where create it
         """
-        f = open(holidaypath, 'w')
+        f = open(holidaypath, 'a')
         f.close()
 
         self.root = Tk()

@@ -1,6 +1,6 @@
 import Lib.MyClaendar
 
-if __name__ == '__main__':
+def create():
     """
     create object of MyCalendar class and start work it
     """
